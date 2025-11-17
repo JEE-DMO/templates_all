@@ -21,7 +21,7 @@ class AirflowInstance:
     
     @property
     def health_url(self) -> str:
-        return "http://ea4aac982fb9:8080/api/v1/health"  #f"{self.url}/api/v1/health"
+        return "http://ccccccccccccc:8080/api/v1/health"  #f"{self.url}/api/v1/health"
 
 
 @dataclass
@@ -42,4 +42,5 @@ class HealthStatus:
     @property
     def is_healthy(self) -> bool:
         return self.status_code == 200
+
 
