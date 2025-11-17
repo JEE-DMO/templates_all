@@ -63,7 +63,7 @@ def aggregate_health_summary(health_statuses: List[HealthStatus]) -> Dict[str, A
     }
     
     
-def get_instances_from_airflowctl(airflowctl_command: str, environments: List[str]) -> List[AirflowInstance]:
+def get_instances_from_airflowClient(airflowClient_command: str, environments: List[str]) -> List[AirflowInstance]:
     
     logger.info(f"Récupération des instances pour les environnements: {environments}")
     instances_data = get_running_instances(environments)
@@ -81,4 +81,5 @@ def get_instances_from_airflowctl(airflowctl_command: str, environments: List[st
     
     logger.info(f"{len(instances)} instances récupérées")
     return instances
+
 
