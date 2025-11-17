@@ -17,7 +17,7 @@ class AirflowInstance:
     
     @property
     def url(self) -> str:
-        return f"https://astronomer_{self.app_code}-{self.environment}-{self.release_uid}.data.gouv.fr" #.data.cloud.net.intradata.eu"
+        return f"wwwwwwwwwwwwwwwwwwwwwwwwwwww"
     
     @property
     def health_url(self) -> str:
@@ -42,3 +42,4 @@ class HealthStatus:
     @property
     def is_healthy(self) -> bool:
         return self.status_code == 200
+
