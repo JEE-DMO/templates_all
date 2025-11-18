@@ -1,0 +1,3 @@
+kubectl -n ns get deployment  deployment  -o yaml | grep vault -A5
+vault kv get <chemin/du/secret/bucket-1>
+kubectl get deployment <dag-processor> -o yaml | grep bucket -A2
