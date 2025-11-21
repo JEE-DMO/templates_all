@@ -1,3 +1,5 @@
+https://adaptivecards.microsoft.com/designer
+
 import requests
 import json
 from airflow.operators.python import PythonOperator
