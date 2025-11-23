@@ -55,8 +55,9 @@ def build_instance_row_html(status: HealthStatus) -> str:
 
 def build_html_report(health_statuses: List[HealthStatus], summary: Dict[str, Any], environment_label: str) -> str:
 
-    instances_rows = '\n'.join([build_instance_row_html(status) for status in health_statuses])
-    environment_details = build_environment_details_html(summary)
+    instances_rows = '\n'.join([build_instance_row_html(status) for status in sorted(health_statuses, key=lambda s: s.instance.business_line)])
+    environment_details = build_environment_details_html(summary, "by_environment")
+    business_line_details = build_environment_details_html(summary, "by_business_line")
     
     html = HTML_TEMPLATE.format(
         environment_label=environment_label,
@@ -80,3 +81,4 @@ def get_email_subject(summary: Dict[str, Any], environment_label: str) -> str:
             f"{summary['healthy_instances']}/{summary['total_instances']} OK "
 
             f"({summary['health_percentage']}%)")
+
