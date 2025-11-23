@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family:Arial, sans-serif; margin:20px; background-color:#f0f2f5;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:1200px;margin:0 auto;background-color:white;padding:20px;">
+        <tr><td>
+            <h1 style="color:#003366;border-bottom:3px solid #0f8b4b;padding-bottom:10px;">
+                🏥 Rapport de Santé Airflow - {environment_label}
+            </h1>
+            <p><b>Généré le :</b> {timestamp}</p>
+
+            <!-- 🟦 Résumé Global -->
+            <table width="100%" cellpadding="10" cellspacing="0" border="0" style="margin-top:20px;">
+                <tr>
+                    <td width="33%" style="background-color:#e0edf7;border-left:4px solid #003366;text-align:center;">
+                        <div style="font-size:32px;font-weight:bold;color:#003366;">{total_instances}</div>
+                        <div style="color:#666;font-size:14px;">Total Instances</div>
+                    </td>
+                    <td width="33%" style="background-color:#d6f3e4;border-left:4px solid #0f8b4b;text-align:center;">
+                        <div style="font-size:32px;font-weight:bold;color:#003366;">{healthy_instances}</div>
+                        <div style="color:#666;font-size:14px;">Instances OK</div>
+                    </td>
+                    <td width="33%" style="background-color:#f8d7da;border-left:4px solid #d43f3a;text-align:center;">
+                        <div style="font-size:32px;font-weight:bold;color:#003366;">{unhealthy_instances}</div>
+                        <div style="color:#666;font-size:14px;">Instances KO</div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- 📌 Par Environnement -->
+            <h2 style="color:#003366;margin-top:30px;">📊 Environnements</h2>
+            {environment_details}
+
+            <!-- 📌 Par Métiers (compact) -->
+            <h2 style="color:#003366;margin-top:30px;">👔 Métiers</h2>
+            {business_line_details}
+
+            <!-- 📋 Instances -->
+            <h2 style="color:#003366;margin-top:30px;">📋 Instances Détaillées</h2>
+
+            <table width="100%" border="0" cellspacing="0" cellpadding="5" style="border-collapse:collapse;">
+                <thead>
+                    <tr>
+                        <th style="background:#003366;color:white;padding:8px;text-align:left;">EQUIPE</th>
+                        <th style="background:#003366;color:white;padding:8px;text-align:left;">ENV</th>
+                        <th style="background:#003366;color:white;padding:8px;text-align:left;">URL</th>
+                        <th style="background:#003366;color:white;padding:8px;text-align:left;">VERSION</th>
+                        <th style="background:#003366;color:white;padding:8px;text-align:left;">HTTP</th>
+                        <th style="background:#003366;color:white;padding:8px;text-align:left;">DAG_PROCESSOR</th>
+                        <th style="background:#003366;color:white;padding:8px;text-align:left;">SCHEDULER</th>
+                        <th style="background:#003366;color:white;padding:8px;text-align:left;">TRIGGER</th>
+                        <th style="background:#003366;color:white;padding:8px;text-align:left;">META_DB</th>
+                        <th style="background:#003366;color:white;padding:8px;text-align:left;">ERROR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {instances_rows}
+                </tbody>
+            </table>
+        </td></tr>
+    </table>
+</body>
+</html>
