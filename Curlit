@@ -1,0 +1,5 @@
+curl -X POST "https://auth-hprd.data.cloud.net.intra/auth/realms/ap27661/protocol/openid-connect/token" \
+     -H "Content-Type: application/x-www-form-urlencoded" \
+     -d "grant_type=client_credentials" \
+     -d "client_id=swagger-ui-spark-cp-hprd" \
+     -d "client_secret=XXXXXXXXXXXX"
