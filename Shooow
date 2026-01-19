@@ -1,0 +1,7 @@
+Je souhaite vous informer en toute transparence d’un léger dépassement de chiffrage.
+Celui-ci s’explique par une matinée impactée par un incident de connexion à mon poste, ainsi que par l’extension du périmètre initialement prévu (HPRD uniquement) afin d’intégrer également la configuration PROD. L’implémentation étant identique, cela a consisté principalement à factoriser et variabiliser les paramètres de connexion à l’API CP Spark.
+
+Malgré ces contraintes, cela permet aujourd’hui de couvrir proprement les environnements HPRD et PROD.
+
+Bien cordialement,
+Djamel
