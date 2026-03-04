@@ -1,4 +1,3 @@
-Voici la **version corrigée avec un seul niveau de sommaire**, plus simple et plus propre pour une page Confluence.
 
 ---
 
@@ -203,5 +202,3 @@ Recommended practices:
 * manage Maven versions through `maven-wrapper.properties`
 
 ---
-
-Si tu veux, je peux aussi te donner **une petite amélioration très utilisée dans les docs d’architecture internes** : ajouter un **tableau “Before / After migration”** qui convainc très vite les équipes habituées à Maven installé.
