@@ -175,13 +175,21 @@ The next execution of the wrapper will automatically download and use the new ve
 
 ---
 
-## 6. Industry Adoption
+## 6. Internal & Industry Adoption
 
 The Maven Wrapper is widely adopted in modern Java projects.
 
-Projects generated with Spring Initializr include the Maven Wrapper by default, which has been the standard practice in the Spring Boot ecosystem for several years.
+Projects generated with Spring Initializr include the Maven Wrapper by default, which has been standard practice in the Spring Boot ecosystem for several years. This reflects a broader industry trend toward reproducible builds and standardized development environments.
 
-Using the wrapper aligns our projects with common practices used across the Java ecosystem.
+Several internal teams also reference the Maven Wrapper in their engineering documentation. These pages confirm that the approach described here is aligned with practices already used across the organization.
+
+Examples of internal references:
+
+- [Data Platform Build Guidelines](https://confluence.company.net/display/PLATFORM/build-guidelines)
+- [Engineering Build Standards](https://confluence.company.net/display/ENG/build-standards)
+- [Java Development Best Practices](https://confluence.company.net/display/JAVA/dev-best-practices)
+
+Although these pages mention the Maven Wrapper, **the present documentation should be considered the reference for our projects**, as it provides the migration steps and usage conventions specifically adapted to our environment.
 
 ---
 
