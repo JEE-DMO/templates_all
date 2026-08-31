@@ -1,0 +1,172 @@
+Pour une **documentation Confluence destinée au support N2/N3**, je la réduirais à une procédure exécutable en **5–10 minutes**, avec escalade selon l'endroit où ça casse.
+
+# OAAS DHV2 — SMTP Quick Troubleshooting
+
+## Flux à connaître
+
+```text
+Vault
+  ↓
+ExternalSecret
+  ↓
+Kubernetes Secret
+  ↓
+AIRFLOW__SMTP__*
+  ↓
+Airflow [smtp]
+  ↓
+SMTP Server :25
+  ↓
+Recipient
+```
+
+> **Important :** Airflow ne lit pas directement Vault. L'ExternalSecret récupère le secret SMTP et celui-ci est injecté dans les pods sous forme de variables `AIRFLOW__SMTP__*`.
+
+---
+
+## Checklist rapide
+
+### 1. Vérifier la configuration vue par Airflow
+
+Depuis **le worker/pod qui exécute la tâche** :
+
+```bash
+env | grep 'AIRFLOW__SMTP' | grep -v PASSWORD
+```
+
+Attendu :
+
+```text
+AIRFLOW__SMTP__SMTP_HOST=...
+AIRFLOW__SMTP__SMTP_PORT=25
+AIRFLOW__SMTP__SMTP_USER=...
+AIRFLOW__SMTP__SMTP_MAIL_FROM=...
+```
+
+Puis :
+
+```bash
+airflow config get-value smtp smtp_host
+airflow config get-value smtp smtp_port
+airflow config get-value smtp smtp_mail_from
+```
+
+**OK → passer directement au réseau/SMTP.**
+**KO → vérifier Secret / ExternalSecret / Vault.**
+
+---
+
+### 2. Si variables absentes ou incorrectes
+
+```bash
+kubectl get externalsecret -n <namespace>
+kubectl describe externalsecret <name> -n <namespace>
+
+kubectl describe secret <smtp-secret> -n <namespace>
+```
+
+Contrôler :
+
+```text
+ExternalSecret Ready=True
+        ↓
+K8s Secret créé
+        ↓
+host / port / user / password / sender présents
+        ↓
+variables injectées dans le pod
+```
+
+Si l'ExternalSecret est KO → vérifier **SecretStore → certificat → policy → path Vault**.
+
+---
+
+### 3. Si configuration Airflow OK : tester le réseau
+
+Depuis le même pod :
+
+```bash
+getent hosts <smtp-host>
+```
+
+puis :
+
+```bash
+nc -vz <smtp-host> 25
+```
+
+Diagnostic immédiat :
+
+| Résultat                 | Investigation                      |
+| ------------------------ | ---------------------------------- |
+| DNS KO                   | DNS                                |
+| DNS OK + port 25 timeout | NetworkPolicy / firewall / routing |
+| Port 25 OK               | SMTP / credentials / Airflow       |
+
+---
+
+### 4. Tester sans Airflow
+
+Si `swaks` est disponible :
+
+```bash
+swaks --server <smtp-host> --port 25 \
+      --from <sender> --to <recipient>
+```
+
+**Swaks KO → problème réseau/SMTP/credentials.**
+
+**Swaks OK + Airflow KO → problème Airflow/code/configuration effective.**
+
+---
+
+### 5. Vérifier les logs
+
+```bash
+kubectl logs <pod> -n <namespace> |
+grep -i -E 'smtp|email|timeout|refused|authentication'
+```
+
+Rechercher principalement :
+
+```text
+Connection timed out       → réseau
+Connection refused         → SMTP/port
+Name or service not known  → DNS
+SMTPAuthenticationError    → credentials
+SMTPSenderRefused          → sender
+SMTPRecipientsRefused      → recipient/policy SMTP
+```
+
+## Arbre de décision N2
+
+```text
+              MAIL KO
+                 │
+                 ▼
+       AIRFLOW__SMTP__* OK ?
+          │             │
+         NON           OUI
+          │             │
+          ▼             ▼
+ ExternalSecret      DNS OK ?
+ / K8s Secret        │     │
+ / Vault            NON   OUI
+                     │     │
+                    DNS    ▼
+                       TCP :25 OK ?
+                         │     │
+                        NON   OUI
+                         │     │
+                      Réseau   ▼
+                            SWAKS
+                           │     │
+                          KO     OK
+                           │     │
+                        SMTP   Airflow
+```
+
+### Règle pratique
+
+**`AIRFLOW__SMTP__*` correctes + TCP/25 OK + `swaks` OK = ne pas perdre de temps côté Vault/Kubernetes.**
+Le secret a déjà parcouru toute la chaîne ; concentrer l'investigation sur **Airflow, le code d'envoi et les logs de la tâche**.
